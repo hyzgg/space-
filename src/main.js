@@ -1,21 +1,24 @@
 import Phaser from 'phaser'
+import CoronaBusterScene from './CoronaBusterScene'
+import FallingObject from './ui/FallingObject'
 
-import HelloWorldScene from './HelloWorldScene'
-import AmongUsScene from './AmongUsScene'
-import CollectingStarsScene from './CollectingStarsScene'
 
 const config = {
 	type: Phaser.AUTO,
-	parent: 'app',
-	width: 800,
-	height: 600,
+	
+	width: 400,
+	height: 620,
 	physics: {
 		default: 'arcade',
 		arcade: {
-			gravity: { y: 200 },
+			gravity: { y: 0 },
 		},
 	},
-	scene: [CollectingStarsScene],
+	scene: [CoronaBusterScene],
+	scale : {
+		mode :Phaser.Scale.FIT,
+		autoCenter : Phaser.Scale.CENTER_BOTH
+		},
 }
 
 export default new Phaser.Game(config)
