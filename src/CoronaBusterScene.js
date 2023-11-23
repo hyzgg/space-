@@ -17,6 +17,7 @@ export default class CoronaBusterScene extends
         this.enemySpeed = 50;
         this.lasers = undefined;
         this.lastFired = 10;
+        this.handsanitizer = undefined
 
     }
     preload() {
@@ -34,6 +35,9 @@ export default class CoronaBusterScene extends
             frameHeight: 16,
         })
         this.load.image('enemy', 'images/enemy.png')
+        this.load.image('handsanitizer', 'images/handsanitizer.png')
+
+        this.load.audio('bgsound', '')
 
     }
     create() {
@@ -67,10 +71,40 @@ export default class CoronaBusterScene extends
             callbackScope: this,
             loop: true
         })
+        this.handsanitizer = this.physics.add.group({
+            classType: FallingObject,
+            runChildUpdate: true
+        })
+        this.time.addEvent({
+            delay: 1000,
+            callback: this.spawnHanitizer,
+            callbackScope: this,
+            loop: true,
+        })
     }
+
+    spawnHanitizer() {
+        var config = {
+            speed: 60,
+            rotation: 0
+        }
+
+        // @ts-ignore
+        const handsanitizer = this.handsanitizer.get(0, 0, 'handsanitizer', config)
+        const positionX = Phaser.Math.Between(70, 330)
+        if (handsanitizer) {
+            handsanitizer.spawn(positionX)
+        }
+    }
+
     update(time) {
         this.movePlayer(this.player, time)
         this.physics.overlap(this.lasers, this.enemies, this.hitEnemy, null, this);
+        this.physics.overlap(this.player, this.handsanitizer, this.increaseLife, null, this)
+    }
+
+    increaseLife(player, handsanitizer) {
+        handsanitizer.die()
     }
 
     hitEnemy(laser, enemy) {
