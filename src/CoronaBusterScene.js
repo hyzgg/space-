@@ -70,6 +70,15 @@ export default class CoronaBusterScene extends
     }
     update(time) {
         this.movePlayer(this.player, time)
+        this.physics.overlap(this.lasers, this.enemies, this.hitEnemy, null, this);
+    }
+
+    hitEnemy(laser, enemy) {
+        // Menghancurkan objek laser yang terkena
+        laser.destroy();
+
+        // Menghancurkan objek musuh yang terkena (anda perlu menyesuaikan ini dengan kelas dan logika permainan Anda)
+        enemy.destroy();
     }
     createButton() {
         this.input.addPointer(3)
@@ -154,10 +163,6 @@ export default class CoronaBusterScene extends
         if (enemy) {
             enemy.spawn(positionX)
         }
-    }
-    hitEnemy(laser, enemy) {
-        laser.die()
-        enemy.die()
     }
 
 
