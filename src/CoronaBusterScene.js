@@ -18,6 +18,10 @@ export default class CoronaBusterScene extends
         this.lasers = undefined;
         this.lastFired = 10;
         this.handsanitizer = undefined
+        this.scoreLabel = undefined
+        this.score = 0
+        this.lifeLabel = undefined
+        this.life = 3
 
     }
     preload() {
@@ -81,7 +85,25 @@ export default class CoronaBusterScene extends
             callbackScope: this,
             loop: true,
         })
+        this.scoreLabel = this.add.text(10,10,'Score', {
+            fontSize: '16px',
+            
+            backgroundColor: 'white'
+            }).setDepth(1)
+        this.scoreLabel = this.add.text(10,10,'Score', {
+            fontSize: '16px',
+            
+            backgroundColor: 'white'
+            }).setDepth(1)
+        this.physics.add.overlap(
+            this.player,
+            this.enemies,
+            this.decreaseLife,
+            null,
+            this
+            )
     }
+    
 
     spawnHanitizer() {
         var config = {
@@ -101,6 +123,9 @@ export default class CoronaBusterScene extends
         this.movePlayer(this.player, time)
         this.physics.overlap(this.lasers, this.enemies, this.hitEnemy, null, this);
         this.physics.overlap(this.player, this.handsanitizer, this.increaseLife, null, this)
+        this.scoreLabel.setText('Score : ' + this.score);
+        this.lifeLabel.setText('life : ' + this.score);
+
     }
 
     increaseLife(player, handsanitizer) {
@@ -113,6 +138,7 @@ export default class CoronaBusterScene extends
 
         // Menghancurkan objek musuh yang terkena (anda perlu menyesuaikan ini dengan kelas dan logika permainan Anda)
         enemy.destroy();
+        this.score += 10;
     }
     createButton() {
         this.input.addPointer(3)
@@ -177,7 +203,7 @@ export default class CoronaBusterScene extends
             this.player.setVelocityX(0)
             this.player.anims.play('turn')
         }
-        //above there’s codes for moving player
+        //above there's codes for moving player
         if ((this.shoot) && time > this.lastFired) {
             const laser = this.lasers.get(0, 0, 'laser')
             if (laser) {
@@ -199,5 +225,16 @@ export default class CoronaBusterScene extends
         }
     }
 
+    decreaseLife(player, enemy){
+        enemy.die()
+        this.life--
+        if (this.life == 2){
+        player.setTint(0xff0000)
+        }else if (this.life == 1){
+        player.setTint(0xff0000).setAlpha(0.2)
+        }else if (this.life == 0) {
+        this.scene.start('over-scene',{score:this.score})
+        }
+        }
+    }
 
-}
